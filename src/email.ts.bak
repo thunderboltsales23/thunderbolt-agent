@@ -1,0 +1,88 @@
+import nodemailer from 'nodemailer';
+import { LeadData } from './types';
+
+function getTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
+
+export async function sendProposal(lead: LeadData): Promise<boolean> {
+  if (!lead.email) return false;
+
+  const proposalUrl = process.env.PROPOSAL_PDF_URL || '';
+  const bookingUrl = process.env.BOOKING_URL || '';
+  const fromName = process.env.FROM_NAME || 'Ian | Thunderbolt Sales Systems';
+  const fromEmail = process.env.FROM_EMAIL || '';
+
+  const niche = lead.niche || 'home service';
+  const firstName = lead.firstName || 'there';
+  const jobValue = lead.avgJobValue ? `$${lead.avgJobValue.toLocaleString()}` : '$4,000+';
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px;">
+  <div style="max-width: 600px; margin: 0 auto; background: #0a0a0a; border-radius: 12px; overflow: hidden;">
+    
+    <div style="background: #F5C518; padding: 20px 32px; text-align: center;">
+      <h1 style="color: #0a0a0a; margin: 0; font-size: 22px;">⚡ Your Custom Proposal is Ready</h1>
+    </div>
+    
+    <div style="padding: 32px; color: #e8e8e8;">
+      <p style="font-size: 16px;">Hey ${firstName},</p>
+      
+      <p>Based on our conversation, I put together your custom proposal for the Thunderbolt AI Sales System.</p>
+      
+      <p><strong style="color: #F5C518;">The short version:</strong> Your system follows up with every missed call in 60 seconds, runs a 7-touch sequence, and books jobs on autopilot — 24/7.</p>
+      
+      <div style="background: #1a1a1a; border-left: 4px solid #F5C518; padding: 16px 20px; margin: 24px 0; border-radius: 4px;">
+        <p style="margin: 0; color: #F5C518; font-weight: bold;">The Math for Your Business:</p>
+        <p style="margin: 8px 0 0;">One ${niche} job at ${jobValue} covers your entire setup fee.<br>
+        We guarantee 3 booked jobs in 30 days — or month 2 is free.</p>
+      </div>
+      
+      <p><strong>Your investment:</strong> $2,000 setup + $647/month (cancel anytime)</p>
+      
+      <div style="text-align: center; margin: 32px 0;">
+        <a href="${proposalUrl}" style="background: #F5C518; color: #0a0a0a; padding: 14px 32px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block; margin-bottom: 12px;">
+          📄 View Your Full Proposal
+        </a>
+        <br>
+        <a href="${bookingUrl}" style="color: #F5C518; font-size: 14px;">or book a 15-min call to go over it together →</a>
+      </div>
+      
+      <p style="color: #888; font-size: 13px;">Questions? Reply to this email — I respond same day.</p>
+      
+      <p>— ${fromName}</p>
+    </div>
+    
+    <div style="background: #111; padding: 16px 32px; text-align: center;">
+      <p style="color: #555; font-size: 12px; margin: 0;">Thunderbolt Sales Systems · AI-Powered Sales for ${niche} Contractors</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  try {
+    const transporter = getTransporter();
+    await transporter.sendMail({
+      from: `"${fromName}" <${fromEmail}>`,
+      to: lead.email,
+      subject: `${firstName}, your Thunderbolt proposal + the 3-job guarantee`,
+      html,
+    });
+    console.log(`✓ Proposal sent to ${lead.email}`);
+    return true;
+  } catch (err: any) {
+    console.warn('⚠ Proposal email failed:', err.message);
+    return false;
+  }
+}
