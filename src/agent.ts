@@ -93,6 +93,7 @@ Current context: You're talking to a home service contractor in the greater Atla
 // Extract lead data from conversation
 function extractLeadData(messages: Message[]): Partial<LeadData> {
   const text = messages.map(m => m.content).join(' ').toLowerCase();
+  const userText = messages.filter(m => m.role === 'user').map(m => m.content).join(' ');
   const extracted: Partial<LeadData> = {};
 
   // Extract niche
@@ -112,7 +113,19 @@ function extractLeadData(messages: Message[]): Partial<LeadData> {
 
   // Extract job value
   const jobMatch = text.match(/\$?(\d[\d,]+)\s*(per job|a job|average|avg|job value)/);
-  if (jobMatch) extracted.avgJobValue = parseInt(jobMatch[1].replace(',', ''));
+  if (jobMatch) extracted.avgJobValue = parseInt(jobMatch[1].replace(/,/g, ''));
+
+  // Extract email
+  const emailMatch = userText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  if (emailMatch) extracted.email = emailMatch[0];
+
+  // Extract US phone number
+  const phoneMatch = userText.match(/(?:\+?1[-.\s]?)?\(?([2-9]\d{2})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})/);
+  if (phoneMatch) extracted.phone = `${phoneMatch[1]}${phoneMatch[2]}${phoneMatch[3]}`;
+
+  // Extract first name from intro phrases
+  const nameMatch = userText.match(/\b(?:i'?m|i am|this is|my name is|name's|it's)\s+([A-Z][a-z]+)\b/i);
+  if (nameMatch) extracted.firstName = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1).toLowerCase();
 
   // Extract timeline signals
   if (text.includes('right now') || text.includes('asap') || text.includes('immediately') || text.includes('ready to start')) {
@@ -179,7 +192,7 @@ export async function chat(session: Session, userMessage: string): Promise<{
     messages: claudeMessages,
   });
 
-  const rawReply = response.content[0].type === 'text' ? response.content[0].text : '';
+  const rawReply = response.content.filter(b => b.type === 'text').map(b => b.text).join('');
   const cleanReply = cleanResponse(rawReply);
 
   // Update session
@@ -211,8 +224,9 @@ export async function chat(session: Session, userMessage: string): Promise<{
   }
 
   // Create GHL contact once we have email
-  if (session.lead.email && session.lead.firstName && !session.notifiedHot) {
+  if (session.lead.email && session.lead.firstName && !session.contactCreated) {
     actions.push('create_contact');
+    session.contactCreated = true;
   }
 
   return { reply: cleanReply, session, actions };

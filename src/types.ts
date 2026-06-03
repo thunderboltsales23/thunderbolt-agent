@@ -57,4 +57,5 @@ export interface Session {
   notifiedHot: boolean;
   proposalSent: boolean;
   closeLinkSent: boolean;
+  contactCreated: boolean;
 }

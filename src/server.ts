@@ -63,6 +63,7 @@ app.post('/session/start', (req, res) => {
     notifiedHot: false,
     proposalSent: false,
     closeLinkSent: false,
+    contactCreated: false,
   };
 
   sessions.set(id, session);

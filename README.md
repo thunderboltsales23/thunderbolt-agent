@@ -59,8 +59,8 @@ AI-powered sales agent that captures, qualifies, proposes, closes, and onboards 
 |---|---|
 | ANTHROPIC_API_KEY | Your Anthropic API key |
 | GHL_WEBHOOK_URL | GHL webhook URL for lead notifications |
-| SMTP_USER | Gmail address for sending proposals |
-| SMTP_PASS | Gmail App Password |
+| SMTP_USER | Verified SendGrid sender email |
+| SMTP_PASS | SendGrid API key |
 | FROM_EMAIL | From address |
 | FROM_NAME | From name (e.g. "Ian | Thunderbolt Sales Systems") |
 | PROPOSAL_PDF_URL | URL to your proposal PDF |
