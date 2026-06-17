@@ -186,7 +186,7 @@ export async function chat(session: Session, userMessage: string): Promise<{
 
   // Get Claude response
   const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 400,
     system: SYSTEM_PROMPT + contextNote,
     messages: claudeMessages,
