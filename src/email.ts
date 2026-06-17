@@ -4,7 +4,13 @@ import { LeadData } from './types';
 export async function sendProposal(lead: LeadData): Promise<boolean> {
   if (!lead.email) return false;
 
-  const apiKey = process.env.SMTP_PASS || '';
+  // SendGrid API key. Prefer the correctly-named var; fall back to SMTP_PASS
+  // for backward compat with the old (mislabeled) config.
+  const apiKey = process.env.SENDGRID_API_KEY || process.env.SMTP_PASS || '';
+  if (!apiKey) {
+    console.error('✗ Cannot send proposal: SENDGRID_API_KEY is not set');
+    return false;
+  }
   const proposalUrl = process.env.PROPOSAL_PDF_URL || '';
   const bookingUrl = process.env.BOOKING_URL || '';
   const paymentLink = process.env.PAYMENT_LINK || '';
@@ -134,8 +140,11 @@ export async function sendProposal(lead: LeadData): Promise<boolean> {
     console.log(`✓ Proposal sent via SendGrid to ${lead.email}`);
     return true;
   } catch (err: any) {
-    const msg = err.response?.data ? JSON.stringify(err.response.data) : err.message;
-    console.error('✗ SendGrid API error:', msg);
+    const status = err.response?.status;
+    const body = err.response?.data ? JSON.stringify(err.response.data) : err.message;
+    console.error(`✗ SendGrid API error${status ? ` (HTTP ${status})` : ''}:`, body);
+    if (status === 401) console.error('  → 401 means the API key is invalid. Set a real SendGrid key in SENDGRID_API_KEY.');
+    if (status === 403) console.error(`  → 403 usually means the from address (${fromEmail}) is not a verified sender / authenticated domain in SendGrid.`);
     return false;
   }
 }
