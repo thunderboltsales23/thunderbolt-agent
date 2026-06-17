@@ -102,10 +102,32 @@ When you're ready to present the offer or close, include these exact tags in you
 
 Current context: You're talking to a home service contractor in the greater Atlanta metro area.`;
 
+// Pull a dollar job value out of free text, tied to job/ticket/average wording
+// (in either order) so lead counts and phone digits aren't mistaken for it.
+// Supports "$12,000", "$12k", and "12k a job".
+function extractJobValue(text: string): number | undefined {
+  const patterns = [
+    /(?:average|avg|typical|per job|a job|\/job|job value|job is|jobs are|each job|ticket)[^.\d$]{0,15}\$?(\d[\d,]*)(k)?/,
+    /\$?(\d[\d,]*)(k)?\s*(?:per job|a job|\/job|average|avg|job value|a ticket|ticket)/,
+  ];
+  for (const re of patterns) {
+    const m = text.match(re);
+    if (!m) continue;
+    let n = parseInt(m[1].replace(/,/g, ''), 10);
+    if (isNaN(n)) continue;
+    if (m[2]) n *= 1000;          // "12k" → 12000
+    else if (n < 100) n *= 1000;  // bare "12" in a job context means $12k
+    if (n >= 100) return n;
+  }
+  return undefined;
+}
+
 // Extract lead data from conversation
 function extractLeadData(messages: Message[]): Partial<LeadData> {
-  const text = messages.map(m => m.content).join(' ').toLowerCase();
+  // Only read the prospect's own messages — never the agent's — so Bolt's
+  // example figures and niche ranges don't get captured as the lead's data.
   const userText = messages.filter(m => m.role === 'user').map(m => m.content).join(' ');
+  const text = userText.toLowerCase();
   const extracted: Partial<LeadData> = {};
 
   // Extract niche
@@ -123,9 +145,9 @@ function extractLeadData(messages: Message[]): Partial<LeadData> {
   const truckMatch = text.match(/(\d+)\s*(truck|tech|van|employee|guy|crew)/);
   if (truckMatch) extracted.truckCount = parseInt(truckMatch[1]);
 
-  // Extract job value
-  const jobMatch = text.match(/\$?(\d[\d,]+)\s*(per job|a job|average|avg|job value)/);
-  if (jobMatch) extracted.avgJobValue = parseInt(jobMatch[1].replace(/,/g, ''));
+  // Extract average job value (only from the prospect's words, with job context)
+  const jobValue = extractJobValue(text);
+  if (jobValue !== undefined) extracted.avgJobValue = jobValue;
 
   // Extract email
   const emailMatch = userText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
