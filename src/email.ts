@@ -48,15 +48,38 @@ export async function sendProposal(lead: LeadData): Promise<boolean> {
         <p style="margin: 0 0 8px; color: #00A19B; font-weight: bold; font-size: 15px;">The Math for Your Business:</p>
         <p style="margin: 0; color: #b8b8b8; line-height: 1.6;">
           One ${nicheLabel} job at ${jobValue} covers your entire setup fee.<br>
-          We guarantee <strong style="color: #ffffff;">3 booked jobs in 30 days</strong> or month 2 is <strong style="color: #00A19B;">FREE</strong>.
+          With the <strong style="color: #ffffff;">Booked Solid System</strong> we guarantee <strong style="color: #ffffff;">3 booked jobs in 30 days</strong> or month 2 is <strong style="color: #00A19B;">FREE</strong>.
         </p>
       </div>
 
-      <!-- INVESTMENT -->
-      <p style="font-size: 15px; color: #C0C0C0;">
-        <strong style="color: #ffffff;">Investment:</strong> $2,000 setup + $647/month
-        <span style="color: #888; font-size: 13px;">(cancel anytime)</span>
-      </p>
+      <!-- INVESTMENT — THREE TIERS -->
+      <div style="margin: 28px 0;">
+        <p style="font-size: 15px; color: #ffffff; font-weight: bold; margin: 0 0 14px;">Choose your tier:</p>
+
+        <!-- Quick Strike -->
+        <div style="background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 8px; padding: 16px 20px; margin-bottom: 12px;">
+          <p style="margin: 0; color: #ffffff; font-weight: bold; font-size: 15px;">Quick Strike System</p>
+          <p style="margin: 4px 0 0; color: #00A19B; font-size: 15px; font-weight: bold;">$297/mo + $1,500 one-time setup</p>
+          <p style="margin: 6px 0 0; color: #b8b8b8; font-size: 13px; line-height: 1.5;">For contractors who already have a website and want the automation stack. Guarantee: 2 booked jobs in 30 days or month 2 is FREE.</p>
+        </div>
+
+        <!-- Booked Solid (most popular) -->
+        <div style="background: #0d0d0d; border: 2px solid #00A19B; border-radius: 8px; padding: 16px 20px; margin-bottom: 12px;">
+          <p style="margin: 0; color: #00A19B; font-size: 11px; font-weight: bold; letter-spacing: 1px;">★ MOST POPULAR</p>
+          <p style="margin: 4px 0 0; color: #ffffff; font-weight: bold; font-size: 15px;">Booked Solid System™</p>
+          <p style="margin: 4px 0 0; color: #00A19B; font-size: 15px; font-weight: bold;">$497/mo + $2,000 one-time setup</p>
+          <p style="margin: 6px 0 0; color: #b8b8b8; font-size: 13px; line-height: 1.5;">Full rebuild + complete automation stack, includes a new AI-powered 5-page website. Guarantee: 3 booked jobs in 30 days or month 2 is FREE.</p>
+        </div>
+
+        <!-- Domination -->
+        <div style="background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 8px; padding: 16px 20px;">
+          <p style="margin: 0; color: #ffffff; font-weight: bold; font-size: 15px;">Domination System</p>
+          <p style="margin: 4px 0 0; color: #00A19B; font-size: 15px; font-weight: bold;">$697/mo + $2,500 one-time setup</p>
+          <p style="margin: 6px 0 0; color: #b8b8b8; font-size: 13px; line-height: 1.5;">For multi-location or high-ad-spend contractors. Guarantee: 5 booked jobs in 30 days or month 2 is FREE.</p>
+        </div>
+
+        <p style="color: #888; font-size: 12px; margin: 12px 0 0;">All tiers are month-to-month — cancel anytime.</p>
+      </div>
 
       <!-- WHAT'S INCLUDED -->
       <div style="margin: 24px 0; padding: 20px 24px; background: #0d0d0d; border-radius: 8px; border: 1px solid #1a1a1a;">
@@ -98,7 +121,7 @@ export async function sendProposal(lead: LeadData): Promise<boolean> {
       {
         personalizations: [{ to: [{ email: lead.email }] }],
         from: { email: fromEmail, name: fromName },
-        subject: `${firstName}, your Thunderbolt ${nicheLabel} proposal + 3-job guarantee`,
+        subject: `${firstName}, your Thunderbolt ${nicheLabel} proposal + booked-job guarantee`,
         content: [{ type: 'text/html', value: html }],
       },
       {
