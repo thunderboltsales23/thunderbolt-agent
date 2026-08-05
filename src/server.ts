@@ -5,9 +5,8 @@ import express from 'express';
 import cors from 'cors';
 import { v4 as uuidv4 } from 'uuid';
 import { Session, QualScore } from './types';
-import { chat, getOpeningMessage } from './agent';
+import { chat, getOpeningMessage, PAYMENT_LINK, BOOKING_URL } from './agent';
 import { notifyHotLead, createGHLContact } from './notify';
-import { sendProposal } from './email';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -61,7 +60,6 @@ app.post('/session/start', (req, res) => {
     createdAt: new Date(),
     updatedAt: new Date(),
     notifiedHot: false,
-    proposalSent: false,
     closeLinkSent: false,
     contactCreated: false,
   };
@@ -98,9 +96,6 @@ app.post('/session/:id/message', async (req, res) => {
     // Execute actions async (don't block the response)
     setImmediate(async () => {
       for (const action of actions) {
-        if (action === 'send_proposal') {
-          await sendProposal(updatedSession.lead);
-        }
         if (action === 'notify_hot') {
           await notifyHotLead(updatedSession);
         }
@@ -117,24 +112,19 @@ app.post('/session/:id/message', async (req, res) => {
       score: updatedSession.score.total,
     };
 
-    // Attach CTAs based on actions
+    // Attach CTAs based on actions. The payment link is the primary close;
+    // booking only appears when the prospect asked to talk to a human.
     if (actions.includes('show_payment_link')) {
       payload.cta = {
         type: 'payment',
-        label: '⚡ Get Started — Pay Setup Fee',
-        url: process.env.PAYMENT_LINK || '#',
+        label: '⚡ Start The M.I.M.O.E. — $297/mo',
+        url: PAYMENT_LINK,
       };
     } else if (actions.includes('show_booking')) {
       payload.cta = {
         type: 'booking',
         label: '📅 Book a 15-Min Call',
-        url: process.env.BOOKING_URL || '#',
-      };
-    } else if (actions.includes('send_proposal')) {
-      payload.cta = {
-        type: 'info',
-        label: '📄 Check your email — proposal incoming',
-        url: null,
+        url: BOOKING_URL,
       };
     }
 

@@ -44,12 +44,12 @@ export function scoreLead(lead: LeadData, messageCount: number): QualScore {
   };
 }
 
+// At $297/month with no setup fee, solo operators and lower-ticket trades now
+// pencil out, so the old team-size and job-value floors no longer disqualify.
+// Only a job value that can't clear a single month of the system does.
 export function isDisqualified(lead: LeadData): string | null {
-  if (lead.truckCount !== undefined && lead.truckCount < 1) {
-    return 'Solo operator — not a fit for Thunderbolt system yet';
-  }
-  if (lead.avgJobValue !== undefined && lead.avgJobValue < 300) {
-    return 'Average job value too low for the math to work';
+  if (lead.avgJobValue !== undefined && lead.avgJobValue < 297) {
+    return 'Average job value below the $297/month cost — the math does not work';
   }
   return null;
 }

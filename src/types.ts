@@ -4,12 +4,11 @@ export type ConversationStage =
   | 'hook'          // Opening pain-point question
   | 'capture'       // Collecting name, business, phone, email
   | 'qualify'       // Scoring the lead
-  | 'pitch'         // ROI math + grand slam offer
-  | 'proposal'      // Sending proposal PDF
+  | 'pitch'         // ROI math + M.I.M.O.E. offer
   | 'close'         // Payment link presented
   | 'onboard'       // Post-close asset collection
   | 'disqualified'  // Not a fit
-  | 'booked';       // Booked a call instead
+  | 'booked';       // Asked to talk to a human first
 
 export interface LeadData {
   firstName?: string;
@@ -18,6 +17,7 @@ export interface LeadData {
   phone?: string;
   email?: string;
   niche?: string;        // HVAC | Roofing | Plumbing | Electrical | Other
+  serviceArea?: string;  // City / metro / region they cover
   truckCount?: number;
   avgJobValue?: number;
   currentFollowUp?: string;
@@ -55,7 +55,6 @@ export interface Session {
   createdAt: Date;
   updatedAt: Date;
   notifiedHot: boolean;
-  proposalSent: boolean;
   closeLinkSent: boolean;
   contactCreated: boolean;
 }

@@ -19,6 +19,7 @@ export async function notifyHotLead(session: Session): Promise<void> {
         phone: lead.phone || '',
         email: lead.email || '',
         niche: lead.niche || '',
+        serviceArea: lead.serviceArea || '',
         truckCount: lead.truckCount,
         avgJobValue: lead.avgJobValue,
         timeline: lead.timeline,
@@ -52,6 +53,7 @@ export async function createGHLContact(session: Session): Promise<void> {
       tags: ['thunderbolt-lead', 'website-chat', lead.niche || ''].filter(Boolean),
       customFields: {
         niche: lead.niche || '',
+        service_area: lead.serviceArea || '',
         truck_count: lead.truckCount || '',
         avg_job_value: lead.avgJobValue || '',
         timeline: lead.timeline || '',

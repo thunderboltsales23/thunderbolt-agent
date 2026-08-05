@@ -1,18 +1,33 @@
 # ⚡ Thunderbolt Agent — Piece 2
 
-AI-powered sales agent that captures, qualifies, proposes, closes, and onboards — autonomously.
+AI-powered sales agent that captures, qualifies, closes, and onboards — autonomously.
+
+## The Offer
+
+The agent sells one thing. There are no tiers.
+
+**The M.I.M.O.E. — $297/month. No setup fee. No contracts.**
+
+- Managed Meta Ads campaigns
+- A professional website
+- A 24/7 AI appointment setter
+- Automated review generation
+- 30-day satisfaction guarantee
+- Limited to 10 contractors per market
 
 ## How It Works
 
 1. Visitor lands on your site
 2. Chat widget opens with a pain-point hook ("When you miss a call, what happens to that lead?")
-3. Agent collects name, business, phone, email naturally mid-conversation
-4. Qualifies them (trucks, job value, follow-up system, timeline)
+3. Agent collects name, business, trade, service area, email, and phone mid-conversation
+4. Qualifies them (trade, service area, job value, follow-up system, timeline)
 5. Surfaces the ROI math at the right moment
-6. Emails the proposal PDF automatically
-7. Presents payment link when hot
-8. Notifies you via GHL when a hot lead hits
-9. Collects onboarding assets post-close
+6. **Closes by sending the payment link** — not by booking a call
+7. Notifies you via GHL when a hot lead hits
+8. Collects onboarding assets post-close
+
+Booking a call is a fallback only: the agent will hand over the calendar link if a prospect
+explicitly asks to talk to a human first, but it never suggests a call on its own.
 
 ## Embed on Your Website
 
@@ -59,13 +74,8 @@ AI-powered sales agent that captures, qualifies, proposes, closes, and onboards 
 |---|---|
 | ANTHROPIC_API_KEY | Your Anthropic API key |
 | GHL_WEBHOOK_URL | GHL webhook URL for lead notifications |
-| SMTP_USER | Verified SendGrid sender email |
-| SMTP_PASS | SendGrid API key |
-| FROM_EMAIL | From address |
-| FROM_NAME | From name (e.g. "Ian | Thunderbolt Sales Systems") |
-| PROPOSAL_PDF_URL | URL to your proposal PDF |
-| PAYMENT_LINK | GHL invoice or Stripe link |
-| BOOKING_URL | Calendar booking URL |
+| PAYMENT_LINK | The M.I.M.O.E. payment link — the agent's close |
+| BOOKING_URL | Calendar link, used only on explicit request for a human |
 | HOT_LEAD_SCORE | Score threshold for hot lead alert (default: 7) |
 
 ## Deploy to Railway
@@ -80,7 +90,5 @@ For each client, create a new Railway service with:
 - Their `GHL_WEBHOOK_URL`
 - Their `PAYMENT_LINK`
 - Their `BOOKING_URL`
-- Their `PROPOSAL_PDF_URL`
-- Customized `FROM_NAME` and `FROM_EMAIL`
 
 One Anthropic API key handles all clients. Cost: ~$0.01–0.05 per conversation.
