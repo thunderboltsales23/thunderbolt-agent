@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx tsc --skipLibCheck",
     "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts"
+    "dev": "ts-node src/server.ts",
+    "test": "npm run build && node tests/agent.test.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.20.0",

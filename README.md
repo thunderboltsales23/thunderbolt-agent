@@ -78,6 +78,24 @@ explicitly asks to talk to a human first, but it never suggests a call on its ow
 | BOOKING_URL | Calendar link, used only on explicit request for a human |
 | HOT_LEAD_SCORE | Score threshold for hot lead alert (default: 7) |
 
+## Tests
+
+```bash
+npm test
+```
+
+Builds, then runs `tests/agent.test.mjs` against the real server from `./dist`
+with only the Anthropic SDK stubbed — no API key needed, no cost. Covers the
+conversion path: that `[CLOSE_READY]` serves the payment link, that booking
+stays a fallback, that lead fields (trade, service area, email, phone, job
+value) are extracted, and that control tags never leak into the chat.
+
+What it deliberately does **not** cover is the model's own wording — that it
+quotes $297, names M.I.M.O.E., and never proposes a call on its own. That
+behavior lives in the system prompt in `src/agent.ts` and can only be checked
+against the live API. After changing the prompt, run a few real conversations
+against the deployed service and confirm those three things by hand.
+
 ## Deploy to Railway
 1. Push to GitHub
 2. Railway → New Project → GitHub Repo
