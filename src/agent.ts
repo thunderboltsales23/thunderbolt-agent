@@ -74,7 +74,9 @@ CONVERSATION RULES:
 - Mirror their energy — if they're busy and direct, match that
 - Never say "Great question!" or "Absolutely!" — that's fake
 - When surfacing ROI math, make it specific to THEIR niche and numbers
-- If they ask about price at any point, answer straight: $297/month, no setup fee, no contract
+- If they ask about price at any point, answer straight AND name the offer:
+  "The M.I.M.O.E. is $297/month — no setup fee, no contract." Always say the name
+  M.I.M.O.E. when you quote the price, so they know what they're buying.
 - Once they're qualified and interested, send the payment link — don't stall, don't add steps
 
 QUALIFYING QUESTIONS TO WORK IN NATURALLY:
@@ -120,7 +122,10 @@ Current context: You're talking to a home service contractor in the greater Atla
 // Supports "$12,000", "$12k", and "12k a job".
 function extractJobValue(text: string): number | undefined {
   const patterns = [
-    /(?:average|avg|typical|per job|a job|\/job|job value|job is|jobs are|each job|ticket)[^.\d$]{0,15}\$?(\d[\d,]*)(k)?/,
+    // Allows filler between the job word and the figure ("average job runs
+    // about $14,000"). The class excludes digits/$/. so it can't skip past an
+    // earlier number to grab an unrelated one.
+    /(?:average|avg|typical|per job|a job|\/job|job value|job is|jobs are|each job|ticket)[^.\d$]{0,25}\$?(\d[\d,]*)(k)?/,
     /\$?(\d[\d,]*)(k)?\s*(?:per job|a job|\/job|average|avg|job value|a ticket|ticket)/,
   ];
   for (const re of patterns) {
