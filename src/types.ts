@@ -4,7 +4,7 @@ export type ConversationStage =
   | 'hook'          // Opening pain-point question
   | 'capture'       // Collecting name, business, phone, email
   | 'qualify'       // Scoring the lead
-  | 'pitch'         // ROI math + M.I.M.O.E. offer
+  | 'pitch'         // ROI math + N.B.O. offer
   | 'close'         // Payment link presented
   | 'onboard'       // Post-close asset collection
   | 'disqualified'  // Not a fit

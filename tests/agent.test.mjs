@@ -8,7 +8,7 @@
 // handling, stage transitions, lead extraction, and the CTA the widget gets.
 //
 // Deliberately NOT tested here: the model's own wording (that it quotes $297,
-// names M.I.M.O.E., and never proposes a call). That lives in the system
+// names N.B.O., and never proposes a call). That lives in the system
 // prompt and can only be verified against the live API — see README.
 //
 // If you change the offer or the close, update EXPECTED_PAYMENT_LINK and the
@@ -110,7 +110,7 @@ async function run() {
     check('CTA type is payment', res.cta?.type === 'payment', JSON.stringify(res.cta));
     check('CTA points at the payment link', res.cta?.url === EXPECTED_PAYMENT_LINK, res.cta?.url);
     check('CTA label names the offer and price',
-      /M\.I\.M\.O\.E\..*297/.test(res.cta?.label || ''), res.cta?.label);
+      /N\.B\.O\..*297/.test(res.cta?.label || ''), res.cta?.label);
     check('CTA label mentions no setup fee',
       !/setup fee/i.test(res.cta?.label || ''), res.cta?.label);
     check('stage advances to close', res.stage === 'close', res.stage);

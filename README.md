@@ -6,7 +6,7 @@ AI-powered sales agent that captures, qualifies, closes, and onboards — autono
 
 The agent sells one thing. There are no tiers.
 
-**The M.I.M.O.E. — $297/month. No setup fee. No contracts.**
+**The N.B.O. (No-Brainer Offer) — $297/month. No setup fee. No contracts.**
 
 - Managed Meta Ads campaigns
 - A professional website
@@ -74,7 +74,7 @@ explicitly asks to talk to a human first, but it never suggests a call on its ow
 |---|---|
 | ANTHROPIC_API_KEY | Your Anthropic API key |
 | GHL_WEBHOOK_URL | GHL webhook URL for lead notifications |
-| PAYMENT_LINK | The M.I.M.O.E. payment link — the agent's close |
+| PAYMENT_LINK | The N.B.O. payment link — the agent's close |
 | BOOKING_URL | Calendar link, used only on explicit request for a human |
 | HOT_LEAD_SCORE | Score threshold for hot lead alert (default: 7) |
 
@@ -91,7 +91,7 @@ stays a fallback, that lead fields (trade, service area, email, phone, job
 value) are extracted, and that control tags never leak into the chat.
 
 What it deliberately does **not** cover is the model's own wording — that it
-quotes $297, names M.I.M.O.E., and never proposes a call on its own. That
+quotes $297, names N.B.O., and never proposes a call on its own. That
 behavior lives in the system prompt in `src/agent.ts` and can only be checked
 against the live API. After changing the prompt, run a few real conversations
 against the deployed service and confirm those three things by hand.

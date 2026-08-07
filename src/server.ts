@@ -117,7 +117,7 @@ app.post('/session/:id/message', async (req, res) => {
     if (actions.includes('show_payment_link')) {
       payload.cta = {
         type: 'payment',
-        label: '⚡ Start The M.I.M.O.E. — $297/mo',
+        label: '⚡ Start The N.B.O. — $297/mo',
         url: PAYMENT_LINK,
       };
     } else if (actions.includes('show_booking')) {
